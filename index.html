@@ -86,109 +86,14 @@
         </div>
     </div>
 
-    <div id="backModel" v-show="isBackModelShow" v-cloak>
-        <div class="back-content">
-            <ul>
-                <li v-for="(item,index) in themeLists" :class="{active: item.id==selThemeIndex}" @click="selectTheme(item.id,0)">
-                    <img :src="item.thumb" /><p>{{item.name}}</p><i class="fas fa-check-circle"></i>
-                </li>
-                            </ul>
-            <ul class="net-color-fr">
-                <li :class="{active: selThemeIndex == -2}" @click="selectTheme(-2,2)">
-                    <img src="https://cdn.miguyu.com/imgs/bg/thumb0.jpg" />
-                    <p>网络背景</p>
-                    <i class="fas fa-check-circle"></i>
-                </li>
-                <div class="set-color-box" v-show="selThemeIndex == -2">
-                    <div class="pic-url-fr"><label>图片地址(https://开头)：</label><input type="text" class="input-text-style" id="net-pic-url" name="net-pic-url" maxlength="256" size="30" placeholder="请输入网络图片地址" @keyup="stNetBg" @mouseup="stNetBg"></div>
-                    <label>文字颜色：</label><input id="text-color" class="jscolor" @change="setTextColor(0)" value="111111">&nbsp;&nbsp;&nbsp;<label>栏目颜色：</label><input id="cat-color" class="jscolor" @change="setTextColor(1)" value="111111">&nbsp;&nbsp;&nbsp;<input type="checkbox" id="check-ray" class="cust-checkbox" :checked="isRayChecked" @click="checkRay"><label style="color: #F2F2F2">光亮</label>&nbsp;&nbsp;&nbsp;<label>光亮颜色：</label><input id="ray-color" class="jscolor" @change="setTextColor(2)" value="FFFFFF">
-                </div>
-            </ul>
-            <p><button id="saveTheme" @click="saveTheme">保存</button>&nbsp;&nbsp;&nbsp;<button id="closeTheme" @click="closeTheme">关闭</button></p>
-            <p class="theme-tip"></p>
-        </div>
-    </div>
-
     
-    
-    <div id="myModelSite" v-show="isModelSiteShow" v-cloak>
-        <p style="text-align: center; font-size: 20px">网址设置&nbsp;&nbsp;&nbsp;<i class="far fa-times-circle" style="cursor:pointer" @click="closeModelSite()" title="关闭"></i></p>
-        <div class="hide-site-box">
-            <div class="hide-sites" v-cloak>
-                <div class="hide-cat-lists" v-for="(item,index) in hCaLs" :data-id="item.cid" :data-sort="item.type">
-                    <div class="hide-site-cat" :data-idx="index">
-                        <div class="set-cat"><i class="fas fa-caret-up icon icon-sort-up" v-if="index>1 && index<cNn-1" @click="sortU(index)"></i><i class="fas fa-caret-down icon icon-sort-down" v-if="index>0 && index<cNn-2" @click="sortD(index)"></i></div>
-                        <div class="cat-item"><span>{{item.catname}}</span><i class="far fa-edit" v-show="index<cNn-1" @click="openEditCatForm(index)"></i>
-                        <span class="icon-exp" @click="shrinkSon(index)" v-show="item.exp==1"><i class="fas fa-angle-double-up"></i>收缩</span><span class="icon-exp" @click="expandSon(index)" v-show="item.exp==0"><i class="fas fa-angle-double-down"></i>展开</span></div>
-                        <div class="switchHint"><span v-if="item.ishide==0 && index>0 && index<cNn-1">[前台显示]</span><span v-if="item.ishide==1 && index>0  && index<cNn-1">[前台隐藏]</span></div>
-                        <div class="switch" v-if="index>0 && index<cNn-1">
-                            <input :id="'switch'+index" type="checkbox" hidden="hidden" :checked="item.ishide==0" @click="swHide(index)"/>
-                            <label :for="'switch'+index"></label>
-                        </div>
-
-                    </div>
-                    <div class="hide-site-lists" v-show="item.exp==1">
-                        <ul v-bind:class="{edit:is_edit}">
-                            <li v-for="(item1,index1) in hLs[index].sites" :data-id="item1.id" :data-cid="item1.type" :data-sort="item1.order" :data-tmpcid="item1.tmptype" :data-tmpsort="item1.tmporder" v-bind:class="{'allow-edit':item1.isedit==1}" :data-idx="index1" class="item sort site" draggable='true' @dragstart='dragSiteStart($event,index,index1)' @dragend="dragSiteEnd($event)" @drop="dropSite($event)" @dragenter='dragSiteEnter($event,index,index1)' @dragover='dragOverSite($event,index,index1)'>
-                                <a target="_blank" :href="item1.url"><img width="20" :src="item1.logo"><span class="text">{{item1.title}}</span></a>
-                                <div class="set-url" v-if="item1.isedit==1"><i class="icon smallIconEdit fas fa-pencil-alt" @click="editUrl(item1.id,item1.turl,item1.title,index,index1)" title="编辑" data-toggle="modal" data-target="#editSite"></i><i class="icon smallIconDel far fa-times-circle" @click="removeUrl($event,item1,index,index1)" title="移除"></i></div>
-                            </li>
-                            <li v-if="hLs[index].sites.length < 30 && index<cNn-1" class="item site add-site" draggable='false' @dragenter='dragSiteEnter($event,index,-2)' @dragover='dragOverSite($event,index,-2)'>
-                                <a href="javascript:void(0)" data-toggle="modal" data-target="#addSite" @click="addSite(index)">
-                                    <img src="https://cdn.miguyu.com/imgs/icon/plus.png">
-                                    <span>添加网站</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <p><button id="saveModelSite" @click="saveModelSite()">保存</button>&nbsp;&nbsp;&nbsp;<button id="closeModelSite" @click="closeModelSite()">关闭</button></p>
-            </div>
-            <div class="hide-btn-box">
-
-            </div>
-            <div class="hide-ff-box"></div>
-        </div>
-
-        <div class="editSiteModal" v-show="isEditSiteShow" v-cloak>
-            <div class="edit-site-panel">
-                <div class="site-frame-box">
-                    <div class="custom-input"><label>网址：</label><input type="text" v-model="myEdSite.url"></div>
-                    <div class="custom-input"><label>名称：</label><input type="text" v-model="myEdSite.name"></div>
-                    <div class="custom-btn"><input type="button" value="保存" @click="postEditUrl"><input type="button" value="关闭" @click="closeEditSiteForm"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="addSiteModal" v-show="isAddSiteShow" v-cloak>
-            <div class="edit-site-panel">
-                <div class="site-frame-box">
-                    <div class="custom-input"><label>网址：</label><input type="text" v-model="myAddSite.url"></div>
-                    <div class="custom-input"><label>名称：</label><input type="text" v-model="myAddSite.name"></div>
-                    <div class="custom-btn"><input type="button" value="保存" @click="postAddUrl"><input type="button" value="关闭" @click="closeAddSiteForm"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="editCatModal" v-show="isEditCatShow" v-cloak>
-            <div class="edit-cat-panel">
-                <div class="site-frame-box">
-                    <div class="custom-input"><label>名称：</label><input type="text" v-model="myEditCat.name"></div>
-                    <div class="custom-btn"><input type="button" value="保存" @click="postEditCat"><input type="button" value="关闭" @click="closeEditCatForm"></div>
-                </div>
-            </div>
-        </div>
-    </div>
     
     <div id="footer" v-cloak>
-        <p class="bot-link"><span class="handPo" @click="togLay()"><i class="fas fa-th-large"></i>&nbsp;布局</span>&nbsp;&nbsp;<span class="handPo" @click="showModelTheme()"><i class="fas fa-tshirt"></i>&nbsp;背景</span>&nbsp;&nbsp;<span class="handPo" @click="showModelSite()"><i class="fas fa-cog"></i>&nbsp;网址</span>&nbsp;&nbsp;<span class="handPo" onclick="logOut()">退出</span></p>
-                <p>Copyright © 2021 bqtlq，<a href="https://beian.miit.gov.cn" target="_blank" rel="nofollow">ICP备案号</a>&nbsp;&nbsp;EMAIL：admin@email.com&nbsp;&nbsp;<a href="/friendlink" target="_blank">友情链接</a>&nbsp;&nbsp;<a href="/aboutus" target="_blank" rel="nofollow">关于我们</a>&nbsp;&nbsp;<a href="/copyright" target="_blank" rel="nofollow">版权声明</a>&nbsp;&nbsp;<span class="handPo" onclick="giveSubject()">留言反馈</span></p>
+        <p class="bot-link"><span class="handPo" @click="showModelSite()"><i class="fas fa-cog"></i>&nbsp;网址</span>&nbsp;&nbsp;<span class="handPo" @click="showLogin()">登录</span>&nbsp;&nbsp;</p>
+                <p>Copyright © 2021 南京百千帮信息科技有限公司，<a href="https://beian.miit.gov.cn" target="_blank" rel="nofollow">苏ICP备17008083号-12</a>&nbsp;&nbsp;QQ群：584330841&nbsp;&nbsp;<a href="/friendlink" target="_blank">友情链接</a>&nbsp;&nbsp;<a href="/aboutus" target="_blank" rel="nofollow">关于我们</a>&nbsp;&nbsp;<a href="/copyright" target="_blank" rel="nofollow">版权声明</a>&nbsp;&nbsp;<span class="handPo" onclick="giveSubject()">留言反馈</span></p>
             </div>
 </div>
-<script>
-  var pJpara = 'data';  
-</script>    
- <!--
+
 <script>
 var fTs = [];
 var pJpara = '';
@@ -198,17 +103,8 @@ fTs = [{"id":0,"type":0,"name":"\u65e0\u80cc\u666f","thumb":"./image/thumb0.jpg"
 const pAcust = '67c9fb5068073d78cb5ad76182698fc5';
 const searchEngines = [{"id":0,"name":"\u767e\u5ea6","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/baidu.png')","url":"https:\/\/www.baidu.com\/s?wd="},{"id":1,"name":"\u641c\u72d7","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/sogou.png')","url":"https:\/\/www.sogou.com\/web?query="},{"id":2,"name":"360","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/360.png')","url":"https:\/\/www.so.com\/s?q="},{"id":3,"name":"Google","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/google.png')","url":"https:\/\/www.google.com\/search?q="},{"id":4,"name":"Bing","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/bing.png')","url":"https:\/\/cn.bing.com\/search?q="},{"id":13,"name":"\u77e5\u4e4e","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/zhihu.png')","url":"https:\/\/www.zhihu.com\/search?q="},{"id":16,"name":"B\u7ad9","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/bilibili.png')","url":"https:\/\/search.bilibili.com\/all?keyword="},{"id":8,"name":"\u6dd8\u5b9d","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/taobao.png')","url":"https:\/\/s.taobao.com\/search?q="},{"id":9,"name":"\u5929\u732b","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/tmall.png')","url":"https:\/\/list.tmall.com\/search_product.htm?q="},{"id":10,"name":"\u4eac\u4e1c","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/jd.png')","url":"https:\/\/search.jd.com\/Search?keyword="},{"id":14,"name":"\u767e\u5ea6\u5730\u56fe","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/baidumap.png')","url":"https:\/\/map.baidu.com\/search\/?querytype=s&wd="},{"id":18,"name":"\u767e\u5ea6\u7ffb\u8bd1","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/fanyibaidu.png')","url":"https:\/\/fanyi.baidu.com\/?#zh\/en\/"},{"id":15,"name":"\u4e91\u97f3\u4e50","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/yunyinyue.png')","url":"https:\/\/music.163.com\/#\/search\/m\/?s="},{"id":17,"name":"\u5fae\u535a","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/weibo.png')","url":"https:\/\/s.weibo.com\/weibo?q="},{"id":12,"name":"\u7231\u5947\u827a","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/iqiyi.png')","url":"https:\/\/so.iqiyi.com\/so\/q_"},{"id":19,"name":"Github","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/github.png')","url":"https:\/\/github.com\/search?q="},{"id":11,"name":"\u767e\u5ea6\u56fe\u7247","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/baidupic.png')","url":"https:\/\/image.baidu.com\/search\/index?tn=baiduimage&word="},{"id":22,"name":"\u77e5\u7f51","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/cnki.png')","url":"https:\/\/kns.cnki.net\/KNS8\/DefaultResult\/Index?dbcode=SCDB&kw="},{"id":7,"name":"Yandex","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/yandex.png')","url":"https:\/\/yandex.com\/search\/?text="},{"id":20,"name":"\u5934\u6761\u641c\u7d22","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/toutiao.png')","url":"https:\/\/so.toutiao.com\/search?dvpf=pc&source=input&keyword="},{"id":21,"name":"\u817e\u8baf\u89c6\u9891","img":"url('https:\/\/cdn.miguyu.com\/statics\/search\/vqq.png')","url":"https:\/\/v.qq.com\/x\/search\/?q="}];
 
- </script>
-
-<script>
-/*
-uconfs = {"srhid":0,"thmid":35,"hot":0,"rili":0,"weather":0,"logo":0,"cat":0,"laytype":0};
-meTheme = {"id":35,"type":0,"name":"\u661f\u7a7a\u591c\u666f","thumb":"https:\/\/cdn.miguyu.com\/imgs\/bg\/thumb35.jpg","url":"https:\/\/cdn.miguyu.com\/imgs\/bg\/aco7003Axz11094c.jpg","color":"#E2E2E2","color1":"#A4A4A4","ray":"#F5F5F5","op":1};
-netTheme = {"id":-2,"type":0,"name":"\u7f51\u7edc\u80cc\u666f","thumb":"","url":"","color":"#111111","color1":"#111111","ray":"#F5F5F5","op":1};
-*/
-pJpara = 'data';
 </script>
-//-->
+
 <script type="text/javascript" src="./js/slideverify.js"></script>
 <script type="text/javascript" src="./js/jscolor1.js"></script>
 <script type="text/javascript" src="./js/formvalidator.js"></script>
@@ -220,9 +116,9 @@ pJpara = 'data';
 
 <script type="text/javascript" src="./js/TEST0207pcB08abYYf.min.js"></script>
 
-<!--
+
 <script>
-    var siteId = '123456789';
+    var siteId = '1279814871';
     var cnzzJs = document.createElement('script');
     cnzzJs.type = 'text/javascript';
     cnzzJs.async = true;
@@ -231,6 +127,6 @@ pJpara = 'data';
     var rootJs = document.getElementsByTagName('script')[0];
     rootJs.parentNode.insertBefore(cnzzJs, rootJs);
 </script>
-//-->
+
 </body>
 </html>
